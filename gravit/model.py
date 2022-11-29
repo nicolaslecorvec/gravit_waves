@@ -1,9 +1,25 @@
-#model test line
+import numpy as np
+import pandas as pd
+import numpy.fft as fft
+import matplotlib.pyplot as plt
+import pickle
+import os
+import math
+import h5py
+import random
+import cv2
+import gc
+from tqdm import tqdm
+from multiprocessing import Pool
+import gc, glob, os
+from concurrent.futures import ProcessPoolExecutor
+import torch
+import torch.nn as nn
+from scipy.stats import norm
+from timm import create_model
 
 """
 This is a test
-
-"""
 
 List of model to test :
     https://smp.readthedocs.io/en/latest/encoders_timm.html
@@ -21,3 +37,22 @@ tf_efficientnet_b0_ns
 List to tester :
     Adam
     softmax
+"""
+
+def get_model(path):
+    model = create_model(
+        "tf_efficientnetv2_b0",
+        in_chans=32,
+        num_classes=2,
+    )
+    state_dict = torch.load(path)
+    C, _, H, W = state_dict["conv_stem.2.weight"].shape
+    model.conv_stem = nn.Sequential(
+        nn.Identity(),
+        nn.AvgPool2d((1, 9), (1, 8), (0, 4), count_include_pad=False),
+        LargeKernel_debias(1, C, [H, W], 1, [H//2, W//2], 1, 1, False),
+        model.conv_stem,
+    )
+    model.load_state_dict(state_dict)
+    model.cuda().eval()
+    return model

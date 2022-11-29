@@ -21,7 +21,11 @@ from timm import create_model
 
 from gravit.normalize import normalize
 
-normalize = normalize()
+from gravit.model import Model
+
+from gravit.preprocess import preprocess
+``
+model = Model()
 
 ##importer la data
 def dataload(filepath):
@@ -49,3 +53,14 @@ def inference(model, path):
             FID += [fid]
             RES += [model(tta).softmax(-1)[..., 1].mean(0)]
     return FID, torch.stack(RES, 0).cpu().float().numpy()
+
+
+
+if __name__ == "__main__":
+    model = get_model("model_best.pth")
+    fid, infer = inference(
+        model, "../input/g2net-detecting-continuous-gravitational-waves/test"
+    )
+    result = pd.DataFrame.from_dict({"id": fid, "target": infer})
+    print(result)
+    #result.to_csv("submission.csv", index=False)
