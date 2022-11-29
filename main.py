@@ -24,7 +24,7 @@ from gravit.normalize import normalize
 from gravit.model import Model
 
 from gravit.preprocess import preprocess
-``
+
 model = Model()
 
 ##importer la data
