@@ -6,6 +6,7 @@ This is a test
 """
 
 List of model to test :
+    https://smp.readthedocs.io/en/latest/encoders_timm.html
 
 tf_efficientnet_l2_ns	88.35%	98.66%
 tf_efficientnet_b7_ns	86.83%	98.08%
