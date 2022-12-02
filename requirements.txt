@@ -8,6 +8,9 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
+
+# gravitational waves
+gwpy
 pyfstat
 
 # tests/linter
